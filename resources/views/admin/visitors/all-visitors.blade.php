@@ -33,6 +33,8 @@
                                     <th scope="col">Time Out</th>
                                     <th scope="col">Reason</th>
                                     <th scope="col">Date Visited</th>
+                                    <th scope="col">Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,6 +54,12 @@
                                         </td>
                                         <td>{{ ucwords($customer->visiting_reason) }}</td>
                                         <td>{{ $customer->created_at->format('M, d Y') }}</td>
+                                        <td>
+                                                <a href="{{ route('editwalkinvisitor', $customer->slug) }}"
+                                                    class="text-success text-sm">Edit</a>
+                                                <a href="{{ route('deletedrivingvisitor', $customer->slug) }}"
+                                                    class="text-xs text-danger">Delete</a>
+                                            </td>
 
                                     </tr>
                                 @endforeach

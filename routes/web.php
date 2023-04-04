@@ -28,10 +28,17 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/all-rentals', [ManageRentalsController::class, 'allrentals'])->name('allrentals');
 Route::get('/add-rental', [ManageRentalsController::class, 'createrental'])->name('createrental');
 Route::post('/store-rental', [ManageRentalsController::class, 'storerental'])->name('storerental');
+Route::get('/edit-rental/{rentalslug}', [ManageRentalsController::class, 'editrental'])->name('editrental');
+Route::patch('/update-rental/{rentalslug}', [ManageRentalsController::class, 'updaterental'])->name('updaterental');
+Route::get('/delete-rental/{rentalslug}', [ManageRentalsController::class, 'deleterental'])->name('deleterental');
 
 Route::get('/all-visitors', [ManageVisitorsController::class, 'allvisitors'])->name('allvisitors');
 Route::get('/create-visitors', [ManageVisitorsController::class, 'createvisitor'])->name('createvisitor');
+Route::get('/edit-visitors/{slug}', [ManageVisitorsController::class, 'editvisitor'])->name('editwalkinvisitor');
 Route::get('/create-driving-visitors', [ManageVisitorsController::class, 'createdrivingvisitor'])->name('createdrivingvisitor');
+Route::get('/edit-driving-visitors/{driverlug}', [ManageVisitorsController::class, 'editdrivingvisitor'])->name('editdrivingvisitor');
+Route::patch('/update-driving-visitors/{driverlug}', [ManageVisitorsController::class, 'updatedrivingvisitor'])->name('updatedrivingvisitor');
+Route::get('/delete-driving-visitors/{driverlug}', [ManageVisitorsController::class, 'deletedrivingvisitor'])->name('deletedrivingvisitor');
 Route::get('/all-driving-visitors', [ManageVisitorsController::class, 'alldrivingvisitors'])->name('alldrivingvisitors');
 Route::post('/store-visitor', [ManageVisitorsController::class, 'storevisitor'])->name('storevisitor');
 Route::post('/store-driving-visitor', [ManageVisitorsController::class, 'storevisitor'])->name('storedrivingvisitor');

@@ -9,6 +9,10 @@ use Brian2694\Toastr\Facades\Toastr;
 
 class ServicesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function allservices()
     {
         $services  = CustomerService::all();

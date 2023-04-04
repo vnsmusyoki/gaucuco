@@ -33,6 +33,7 @@
                                     <th scope="col">Capacity</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Date Created</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,6 +48,10 @@
                                         <td>{{ $rental->capacity }}</td>
                                         <td>{{ ucwords($rental->status) }}</td>
                                         <td>{{ $rental->created_at->format('M, d Y') }}</td>
+                                        <td>
+                                            <a href="{{ route('editrental', $rental->slug)}}" class="btn btn-warning text-sm btn-sm">Edit</a>
+                                            <a href="{{ route('deleterental', $rental->slug)}}" class="btn btn-danger text-sm btn-sm">Delete</a>
+                                        </td>
 
                                     </tr>
                                 @endforeach
