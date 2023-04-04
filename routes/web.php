@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AllUsersController;
 use App\Http\Controllers\Admin\ManageRentalsController;
 use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\ManageVisitorsController;
@@ -36,4 +37,12 @@ Route::post('/store-visitor', [ManageVisitorsController::class, 'storevisitor'])
 Route::post('/store-driving-visitor', [ManageVisitorsController::class, 'storevisitor'])->name('storedrivingvisitor');
 
 Route::get('/all-services', [ServicesController::class, 'allservices'])->name('allservices');
-Route::get('/create-service', [ServicesController::class, 'allservices'])->name('allservices');
+Route::get('/create-service', [ServicesController::class, 'createservice'])->name('addservice');
+Route::post('/store-service', [ServicesController::class, 'storeservice'])->name('storeservice');
+
+Route::get('/all-watchmen', [AllUsersController::class, 'watchmen'])->name('watchmen');
+Route::get('/create-watchmen', [AllUsersController::class, 'createwatchmen'])->name('createwatchmen');
+Route::post('/store-watchmen', [AllUsersController::class, 'storewatchmen'])->name('storewatchmen');
+
+Route::get('/all-owners', [AllUsersController::class, 'allowners'])->name('allowners');
+Route::get('/create-owner', [AllUsersController::class, 'createnewowner'])->name('createnewowner');

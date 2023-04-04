@@ -3,26 +3,30 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\CustomerService;
+use App\Models\Owner;
+use App\Models\Watchmen;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 
-class ServicesController extends Controller
+class AllUsersController extends Controller
 {
-    public function allservices()
+    public function watchmen()
     {
-        $services  = CustomerService::all();
-        return view('admin.services.all-services', compact('services'));
+        $users  = Watchmen::all();
+
+        return view('admin.watchmen.all-users', compact('users'));
     }
-    public function createservice()
+    public function createwatchmen()
     {
-        return view('admin.services.create-service');
+
+        return view('admin.watchmen.create-user');
     }
-    public function storeservice(Request $request)
+    public function storewatchmen(Request $request)
     {
         $this->validate($request, [
-            'service_title' => 'required|string',
-            'description' => 'required|string',
+            'full_name' => 'required|string',
+            'phone_number' => 'required|digits:10',
+            'id_number' => 'required|digits:8',
             'picture' => 'required|image|mimes:jpeg,jpg,png|max:3078',
         ]);
         $timenows = time();
@@ -36,19 +40,28 @@ class ServicesController extends Controller
         $randcheckstrings = substr(str_shuffle($checkstrings), 0, $checkstringlength);
         $totalstrings = str_shuffle($randcheckstrings . "" . $randnums . "" . $randstrings);
 
-        $new = new CustomerService;
+
+        $new = new Watchmen();
         $fileNameWithExt = $request->picture->getClientOriginalName();
         $fileName =  pathinfo($fileNameWithExt, PATHINFO_FILENAME);
         $Extension = $request->picture->getClientOriginalExtension();
         $filenameToStore = $fileName . '-' . time() . '.' . $Extension;
-        $path = $request->picture->storeAs('services', $filenameToStore, 'public');
+        $path = $request->picture->storeAs('users', $filenameToStore, 'public');
         $new->image = $filenameToStore;
-        $new->title = $request->service_title;
-        $new->description = $request->description;
+        $new->name = $request->full_name;
         $new->slug = $totalstrings;
+        $new->phone_number = $request->phone_number;
+        $new->id_number = $request->id_number;
         $new->save();
 
-        Toastr::success('Service Created successfully', 'Success', ["positionClass" => "toast-top-center"]);
-        return redirect()->route('allservices');
+        Toastr::success('New Watchman created Successfully', 'Success', ["positionClass" => "toast-top-center"]);
+        return redirect()->route('watchmen');
+    }
+    public function allowners(){
+        $users  = Owner::all();
+        return view('admin.owners.all-owners', compact('users'));
+    }
+    public function createnewowner(){
+        return view('admin.owners.create-owner');
     }
 }

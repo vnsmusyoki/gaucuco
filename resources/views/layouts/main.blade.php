@@ -360,13 +360,13 @@
                 </a>
                 <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="">
-                            <i class="bi bi-circle"></i><span>Visitors</span>
+                        <a href="{{ route('watchmen')}}">
+                            <i class="bi bi-circle"></i><span>Watchmen</span>
                         </a>
                     </li>
                     <li>
-                        <a href="">
-                            <i class="bi bi-circle"></i><span>Admins</span>
+                        <a href="{{ route('allowners')}}">
+                            <i class="bi bi-circle"></i><span>Owners</span>
                         </a>
                     </li>
                     <li>
