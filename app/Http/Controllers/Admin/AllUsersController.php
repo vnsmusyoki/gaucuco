@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Owner;
+use App\Models\User;
 use App\Models\Watchmen;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
@@ -102,5 +103,22 @@ class AllUsersController extends Controller
 
         Toastr::success('New Business Owner created Successfully', 'Success', ["positionClass" => "toast-top-center"]);
         return redirect()->route('allowners');
+    }
+
+    public function profile()
+    {
+        return view('admin.my-profile');
+    }
+    public function updatepassword(Request $request)
+    {
+        $this->validate($request, [
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required',
+        ]);
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->password = bcrypt($request->password);
+        $user->save();
+        Toastr::success('Account password updated successfully.', 'Success', ["positionClass" => "toast-top-center"]);
+        return redirect()->back();
     }
 }
