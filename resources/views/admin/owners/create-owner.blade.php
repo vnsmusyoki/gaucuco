@@ -19,7 +19,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Upload New Business Owner</h5>
-                        <form method="POST" action="{{ route('storewatchmen')}}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('storebusinessowner')}}" enctype="multipart/form-data">
                             @csrf
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Full Name</label>

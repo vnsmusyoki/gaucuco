@@ -46,3 +46,4 @@ Route::post('/store-watchmen', [AllUsersController::class, 'storewatchmen'])->na
 
 Route::get('/all-owners', [AllUsersController::class, 'allowners'])->name('allowners');
 Route::get('/create-owner', [AllUsersController::class, 'createnewowner'])->name('createnewowner');
+Route::post('/store-owner', [AllUsersController::class, 'storebusinessowner'])->name('storebusinessowner');
