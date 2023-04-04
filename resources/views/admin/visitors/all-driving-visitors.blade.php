@@ -63,10 +63,15 @@
                                             <td>{{ ucwords($customer->category) }}</td>
                                             <td>{{ $customer->created_at->format('M, d Y') }}</td>
                                             <td>
-                                                <a href="{{ route('editdrivingvisitor', $customer->slug) }}"
-                                                    class="text-success text-sm">Edit</a>
-                                                <a href="{{ route('deletedrivingvisitor', $customer->slug) }}"
-                                                    class="text-xs text-danger">Delete</a>
+                                                @if (empty($customer->time_out))
+                                                    <a href="{{ route('editdrivingvisitor', $customer->slug) }}"
+                                                        class="text-warning text-sm">Edit</a>
+                                                    <a href="{{ route('deletedrivingvisitor', $customer->slug) }}"
+                                                        class="text-xs text-danger">Delete</a>
+                                                    <a href="{{ route('editdrivingvisitorcheckout', $customer->slug) }}"
+                                                        class="text-success text-sm"
+                                                        onclick="return confirm('Check Out this visitor?')">Check Out</a>
+                                                @endif
                                             </td>
 
                                         </tr>

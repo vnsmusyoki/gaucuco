@@ -50,7 +50,29 @@
                             </div>
 
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Visitor Category</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select" aria-label="Default select example" name="visiting_customer_category">
+                                        <option value="">click to select </option>
+                                        <option value="Short Term Visitor">Short Term Visitor</option>
+                                        <option value="Long Term Visitor">Long Term Visitor</option>
+                                    </select>
+                                    @error('visiting_customer_category')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
 
+                            <div class="row mb-3">
+                                <label for="inputEmail" class="col-sm-2 col-form-label">Total Members</label>
+                                <div class="col-sm-10">
+                                    <input type="number" min="1" class="form-control" name="total_numbers">
+                                    @error('total_numbers')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="row mb-3">
                                 <label for="inputPassword" class="col-sm-2 col-form-label">Visiting Reason </label>
                                 <div class="col-sm-10">

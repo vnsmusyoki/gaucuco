@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CustomerService;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Storage;
 
 class ServicesController extends Controller
 {
@@ -21,6 +22,32 @@ class ServicesController extends Controller
     public function createservice()
     {
         return view('admin.services.create-service');
+    }
+    public function editservice($slug)
+    {
+        $service = CustomerService::where('slug', $slug)->first();
+        if ($service) {
+
+            return view('admin.services.edit-service', compact('service'));
+        } else {
+
+            Toastr::error('Service  details not found', 'Error', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allservices');
+        }
+    }
+    public function deleteservice($slug)
+    {
+        $service = CustomerService::where('slug', $slug)->first();
+        if ($service) {
+            Storage::delete('public/services/' . $service->image);
+            $service->delete();
+            Toastr::success('Service  details deleted successfully.', 'Success', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allservices');
+         } else {
+
+            Toastr::error('Service  details not found', 'Error', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allservices');
+        }
     }
     public function storeservice(Request $request)
     {
@@ -54,5 +81,36 @@ class ServicesController extends Controller
 
         Toastr::success('Service Created successfully', 'Success', ["positionClass" => "toast-top-center"]);
         return redirect()->route('allservices');
+    }
+    public function updateeservice(Request $request, $slug)
+    {
+        $this->validate($request, [
+            'service_title' => 'required|string',
+            'description' => 'required|string',
+            'picture' => 'nullable|image|mimes:jpeg,jpg,png|max:3078',
+        ]);
+
+        $new = CustomerService::where('slug', $slug)->first();
+        if ($new) {
+            if ($request->hasFile('picture')) {
+                Storage::delete('public/services/' . $new->image);
+                $fileNameWithExt = $request->picture->getClientOriginalName();
+                $fileName =  pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $Extension = $request->picture->getClientOriginalExtension();
+                $filenameToStore = $fileName . '-' . time() . '.' . $Extension;
+                $path = $request->picture->storeAs('services', $filenameToStore, 'public');
+                $new->image = $filenameToStore;
+            }
+
+            $new->title = $request->service_title;
+            $new->description = $request->description;
+            $new->save();
+
+            Toastr::success('Service updated successfully', 'Success', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allservices');
+        } else {
+            Toastr::error('Service details not found.', 'Error', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allservices');
+        }
     }
 }

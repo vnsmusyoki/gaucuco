@@ -24,12 +24,68 @@ class ManageVisitorsController extends Controller
     {
         return view('admin.visitors.create-driving-visitor');
     }
-    public function editvisitor($slug){
+    public function editvisitor($slug)
+    {
         $visitor = WalkininCustomer::where('slug', $slug)->first();
-        if($visitor){
+        if ($visitor) {
             return view('admin.visitors.edit-visitor', compact('visitor'));
-        }else{
+        } else {
             Toastr::success('Walk In Customer details not found', 'Success', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allvisitors');
+        }
+    }
+    public function editwalkinvisitorcheckout($slug)
+    {
+        $visitor = WalkininCustomer::where('slug', $slug)->first();
+        if ($visitor) {
+            $visitor->time_out = Carbon::now();
+            $visitor->save();
+            Toastr::success('Walk In Customer checked out successfully.', 'Success', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allvisitors');
+        } else {
+            Toastr::success('Walk In Customer details not found', 'Success', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allvisitors');
+        }
+    }
+    public function editdrivingvisitorcheckout($slug)
+    {
+        $visitor = DrivingVisitor::where('slug', $slug)->first();
+        if ($visitor) {
+            $visitor->time_out = Carbon::now();
+            $visitor->save();
+            Toastr::success('Driving Customer checked out successfully.', 'Success', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('alldrivingvisitors');
+        } else {
+            Toastr::success('Walk In Customer details not found', 'Success', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('alldrivingvisitors');
+        }
+    }
+    public function updatevisitor(Request $request, $slug)
+    {
+        $this->validate($request, [
+            'full_name' => 'required|string',
+            'phone_number' => 'required|digits:10',
+            'id_number' => 'required|digits:8',
+            'total_numbers' => 'required|numeric|min:1',
+            'visiting_reason' => 'required|string',
+            'visiting_customer_category' => 'required|string',
+        ]);
+
+
+        $new = WalkininCustomer::where('slug', $slug)->first();
+        if ($new) {
+            $new->name = $request->full_name;
+            $new->id_number = $request->id_number;
+            $new->phone_number = $request->phone_number;
+            $new->visiting_reason = $request->visiting_reason;
+            $new->category = $request->visiting_customer_category;
+            $new->members = $request->total_numbers;
+            $new->save();
+
+            Toastr::success('visitor updated successfully', 'Success', ["positionClass" => "toast-top-center"]);
+            return redirect()->route('allvisitors');
+        } else {
+            Toastr::error('visitor details not found ', 'Error', ["positionClass" => "toast-top-center"]);
             return redirect()->route('allvisitors');
         }
     }
@@ -78,6 +134,49 @@ class ManageVisitorsController extends Controller
         $new->save();
 
         Toastr::success('visitor created successfully', 'Success', ["positionClass" => "toast-top-center"]);
+        return redirect()->route('alldrivingvisitors');
+    }
+    public function storewalkingvisitor(Request $request)
+    {
+        $this->validate($request, [
+            'full_name' => 'required|string',
+            'phone_number' => 'required|digits:10',
+            'id_number' => 'required|digits:8',
+            'total_numbers' => 'required|numeric|min:1',
+            'visiting_reason' => 'required|string',
+            'visiting_customer_category' => 'required|string',
+            'picture' => 'required|image|mimes:jpeg,jpg,png|max:3078',
+        ]);
+        $timenows = time();
+        $checknums = "1234567898746351937463790";
+        $checkstrings = "QWERTYUIOPLKJHGFDSAZXCVBNMmanskqpwolesurte191827273jkskalqKNJAHSGETWIOWKSNXJNEUDNEKDKSMKIDNUENDNXKSKEJNEJHCBRFGEWVJHBKWJEBFRNKWJENFECKWLERKJFNRKEHBJWEiwjWSIWMSWISWQOQOAWSAMJENEJEEDEWSSRFRFTHUJOKMNZBXVCX";
+        $checktimelengths = 6;
+        $checksnumlengths = 6;
+        $checkstringlength = 3;
+        $randnums = substr(str_shuffle($timenows), 0, $checktimelengths);
+        $randstrings = substr(str_shuffle($checknums), 0, $checksnumlengths);
+        $randcheckstrings = substr(str_shuffle($checkstrings), 0, $checkstringlength);
+        $totalstrings = str_shuffle($randcheckstrings . "" . $randnums . "" . $randstrings);
+
+
+        $new = new WalkininCustomer;
+        $new->name = $request->full_name;
+        $new->id_number = $request->id_number;
+        $new->phone_number = $request->phone_number;
+        $new->visiting_reason = $request->visiting_reason;
+        $new->category = $request->visiting_customer_category;
+        $new->total_members = $request->total_numbers;
+        $fileNameWithExt = $request->picture->getClientOriginalName();
+        $fileName =  pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+        $Extension = $request->picture->getClientOriginalExtension();
+        $filenameToStore = $fileName . '-' . auth()->user()->id . '.' . $Extension;
+        $path = $request->picture->storeAs('visitors', $filenameToStore, 'public');
+        $new->car_photo = $filenameToStore;
+        $new->slug = $totalstrings;
+        $new->time_in = Carbon::now();
+        $new->save();
+
+        Toastr::success('visitor created successfully', 'Success', ["positionClass" => "toast-top-center"]);
         return redirect()->route('allvisitors');
     }
 
@@ -93,7 +192,7 @@ class ManageVisitorsController extends Controller
             return view('admin.visitors.edit-driving-visitor', compact('driver'));
         } else {
             Toastr::error('visitor details not found', 'Error', ["positionClass" => "toast-top-center"]);
-            return redirect()->route('allvisitors');
+            return redirect()->route('alldrivingvisitors');
         }
     }
     public function updatedrivingvisitor(Request $request, $driverslug)
@@ -133,10 +232,10 @@ class ManageVisitorsController extends Controller
             $new->save();
 
             Toastr::success('visitor updated successfully', 'Success', ["positionClass" => "toast-top-center"]);
-            return redirect()->route('allvisitors');
+            return redirect()->route('alldrivingvisitors');
         } else {
             Toastr::success('Failed to update visitors record', 'Success', ["positionClass" => "toast-top-center"]);
-            return redirect()->route('allvisitors');
+            return redirect()->route('alldrivingvisitors');
         }
     }
     public function deletedrivingvisitor($driverslug)
@@ -146,10 +245,10 @@ class ManageVisitorsController extends Controller
             Storage::delete('public/visitors/' . $driver->car_photo);
             $driver->delete();
             Toastr::success('visitor deleted successfully', 'Success', ["positionClass" => "toast-top-center"]);
-            return redirect()->route('allvisitors');
+            return redirect()->route('alldrivingvisitors');
         } else {
             Toastr::error('Visitor details not found', 'Error', ["positionClass" => "toast-top-center"]);
-            return redirect()->route('allvisitors');
+            return redirect()->route('alldrivingvisitors');
         }
     }
 }

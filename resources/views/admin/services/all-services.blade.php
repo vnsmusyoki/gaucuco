@@ -18,29 +18,43 @@
                     <div class="card-body">
                         <h5 class="card-title">All Customer Services</h5>
                         <p>All Uploaded Customer Services will are listed here</p>
-                        <table class="table datatable">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Image</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Date Created</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($services as $key => $service)
+                        <div class="table-responsive" style="font-size:12px;">
+                            <table class="table datatable">
+                                <thead>
                                     <tr>
-                                        <th scope="row">{{ ++$key }}</th>
-                                        <td><img src="{{ asset('storage/services/' . $service->image) }}"
-                                                style="height:50px;width:50px;border-radius:50%;" alt=""></td>
-                                        <td>{{ ucwords($service->title) }}</td>
-                                        <td>{{ $service->description }}</td>
-                                        <td>{{ $service->created_at->format('M, d Y') }}</td>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Date Created</th>
+                                        <th scope="col">Actions</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($services as $key => $service)
+                                        <tr>
+                                            <th scope="row">{{ ++$key }}</th>
+                                            <td><img src="{{ asset('storage/services/' . $service->image) }}"
+                                                    style="height:50px;width:50px;border-radius:50%;" alt=""></td>
+                                            <td>{{ ucwords($service->title) }}</td>
+                                            <td>
+                                                {{ str_limit(strip_tags($service->description), 50) }}
+                                                @if (strlen(strip_tags($service->description)) > 50) ..
+                                                @endif
+                                            </td>
+                                            <td>{{ $service->created_at->format('M, d Y') }}</td>
+                                            <td>
+                                                <a href="{{ route('editservice', $service->slug) }}"
+                                                    class="text-xs text-warning">Edit</a>
+                                                <a href="{{ route('deleteservice', $service->slug) }}"
+                                                    class="text-xs text-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
 
