@@ -65,8 +65,6 @@
                                                 @enderror
                                         </div>
                                     </div>
-
-
                                     <div class="row mb-3">
                                         <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New
                                             Password</label>
